@@ -1,0 +1,8 @@
+.orderList {
+    display: flex;
+    gap: 5px;
+}
+
+.order {
+    border: 1px solid black;
+}
