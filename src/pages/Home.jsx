@@ -1,25 +1,40 @@
-import axios from "axios";
 import OrderForm from "components/OrderForm";
 import OrderList from "components/OrderList";
+import OrderQueue from "components/OrderQueue";
 import ablyChannels from "config/ably";
+import ENDPOINTS from "config/endpoints";
+import http from "config/http";
 import { useEffect, useState } from "react";
 
 function Home() {
     const [orderQueue, setOrderQueue] = useState([]);
+    const [currentUser, setCurrentUser] = useState("");
 
     const loadAllOrders = async () => {
-        const response = await axios.get("http://localhost:3001/orders");
-        setOrderQueue(response.data);
+        const response = await http.get(ENDPOINTS.ORDER_URL);
+        setOrderQueue(Array.isArray(response.data) ? response.data : []);
     };
 
     useEffect(() => {
         loadAllOrders();
-        ablyChannels.orderQueueChannel.subscribe("update", (message) => {
-            setOrderQueue(message.data);
+        ablyChannels.orderQueueChannel.subscribe("added", (message) => {
+            setOrderQueue((q) => [...q, message.data]);
         });
-        return () => {
-            ablyChannels.orderQueueChannel.unsubscribe("update");
-        };
+        ablyChannels.orderQueueChannel.subscribe("update", (message) => {
+            setOrderQueue((q) =>
+                q.map((order) =>
+                    order._id !== message.data
+                        ? order
+                        : { ...order, status: "processing" }
+                )
+            );
+        });
+        ablyChannels.orderQueueChannel.subscribe("completed", (message) => {
+            setOrderQueue((q) =>
+                q.filter((order) => order._id !== message.data)
+            );
+        });
+        setCurrentUser(localStorage.getItem("email") || "");
     }, []);
 
     return (
@@ -28,7 +43,7 @@ function Home() {
             <h2>Create</h2>
             <OrderForm />
             <h2>Ongoing</h2>
-            <OrderList orderQueue={orderQueue} />
+            <OrderQueue orderQueue={orderQueue} currentUser={currentUser} />
         </div>
     );
 }

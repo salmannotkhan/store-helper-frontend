@@ -1,18 +1,23 @@
-import axios from "axios";
-import { ORDER_URL } from "config/constants";
+import ENDPOINTS from "config/endpoints";
+import http from "config/http";
 import { Field, Form, Formik } from "formik";
 
 function OrderForm() {
     const createOrder = (orderDetails) => {
-        axios.post(ORDER_URL, orderDetails);
+        http.post(ENDPOINTS.ORDER_URL, orderDetails);
+        localStorage.setItem("email", orderDetails.email)
     };
 
     return (
         <Formik
-            initialValues={{ name: "", service: "Hair Cut" }}
+            initialValues={{ name: "", email: "", service: "Hair Cut" }}
             onSubmit={createOrder}>
             <Form>
+                Name:
                 <Field type="text" name="name" />
+                Email:
+                <Field type="email" name="email" />
+                Service:
                 <Field component="select" name="service">
                     <option value="Hair Cut">Hair Cut</option>
                     <option value="Shave">Shave</option>

@@ -1,0 +1,29 @@
+.queue {
+    display: flex;
+    gap: 10px;
+}
+
+.queue li {
+    height: 25px;
+    width: 15px;
+    background-color: #777777;
+    border-radius: 5px;
+    border: 3px solid tranparent;
+}
+
+.queue li.current {
+    border: 3px solid greenyellow;
+}
+
+.queue li.current:before {
+    content: "< You're Here";
+    display: block;
+    margin-top: 20px;
+    width: max-content;
+    transform-origin: left;
+    transform: rotate(90deg) translateY(-40%);
+}
+
+.queue li.active {
+    background-color: black;
+}

@@ -1,8 +1,8 @@
-import axios from "axios";
 import OrderForm from "components/OrderForm";
 import OrderList from "components/OrderList";
 import ablyChannels from "config/ably";
-import { ORDER_URL } from "config/constants";
+import ENDPOINTS from "config/endpoints";
+import http from "config/http";
 import { useEffect, useState } from "react";
 
 function Admin() {
@@ -10,18 +10,27 @@ function Admin() {
 
     useEffect(() => {
         loadAllOrders();
-        ablyChannels.orderQueueChannel.subscribe("update", (message) => {
-            setOrderQueue(message.data);
+        ablyChannels.orderQueueChannel.subscribe("added", (message) => {
+            setOrderQueue((q) => [...q, message.data]);
+        });
+        ablyChannels.orderQueueChannel.subscribe("completed", (message) => {
+            setOrderQueue((q) =>
+                q.filter((order) => order._id !== message.data)
+            );
         });
     }, []);
 
     const markAsCompleted = (orderId) => {
-        axios.delete(`${ORDER_URL}/${orderId}`);
+        http.delete(`${ENDPOINTS.ORDER_URL}/${orderId}`);
+    };
+
+    const markAsProcessing = (orderId) => {
+        http.put(`${ENDPOINTS.ORDER_URL}/${orderId}`);
     };
 
     const loadAllOrders = async () => {
-        const response = await axios.get(ORDER_URL);
-        setOrderQueue(response.data);
+        const response = await http.get(ENDPOINTS.ORDER_URL);
+        setOrderQueue(Array.isArray(response.data) ? response.data : []);
     };
 
     return (
@@ -33,6 +42,7 @@ function Admin() {
             <OrderList
                 orderQueue={orderQueue}
                 markAsCompleted={markAsCompleted}
+                markAsProcessing={markAsProcessing}
             />
         </div>
     );
