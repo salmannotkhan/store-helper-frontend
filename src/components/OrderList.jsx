@@ -1,6 +1,20 @@
 import styles from "assets/css/components/OrderList.module.css";
+import ENDPOINTS from "config/endpoints";
+import http from "config/http";
+import { useContext } from "react";
+import { StateContext } from "state/GlobalState";
 
-function OrderList({ orderQueue, markAsCompleted, markAsProcessing }) {
+function OrderList() {
+    const [{ orderQueue }] = useContext(StateContext);
+
+    const markAsCompleted = (orderId) => {
+        http.delete(`${ENDPOINTS.ORDER_URL}/${orderId}`);
+    };
+
+    const markAsProcessing = (orderId) => {
+        http.put(`${ENDPOINTS.ORDER_URL}/${orderId}`);
+    };
+
     return (
         <ul className={styles.orderList}>
             {orderQueue.map((order) => (

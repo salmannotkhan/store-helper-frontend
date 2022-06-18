@@ -1,0 +1,15 @@
+.orderForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.orderForm div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.orderForm :is(input, select, button) {
+    padding: 10px 5px;
+}

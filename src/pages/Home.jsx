@@ -1,50 +1,26 @@
 import OrderForm from "components/OrderForm";
-import OrderList from "components/OrderList";
 import OrderQueue from "components/OrderQueue";
-import ablyChannels from "config/ably";
-import ENDPOINTS from "config/endpoints";
-import http from "config/http";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
+import styles from "assets/css/pages/Home.module.css";
+import { StateContext } from "state/GlobalState";
 
 function Home() {
-    const [orderQueue, setOrderQueue] = useState([]);
-    const [currentUser, setCurrentUser] = useState("");
-
-    const loadAllOrders = async () => {
-        const response = await http.get(ENDPOINTS.ORDER_URL);
-        setOrderQueue(Array.isArray(response.data) ? response.data : []);
-    };
-
-    useEffect(() => {
-        loadAllOrders();
-        ablyChannels.orderQueueChannel.subscribe("added", (message) => {
-            setOrderQueue((q) => [...q, message.data]);
-        });
-        ablyChannels.orderQueueChannel.subscribe("update", (message) => {
-            setOrderQueue((q) =>
-                q.map((order) =>
-                    order._id !== message.data
-                        ? order
-                        : { ...order, status: "processing" }
-                )
-            );
-        });
-        ablyChannels.orderQueueChannel.subscribe("completed", (message) => {
-            setOrderQueue((q) =>
-                q.filter((order) => order._id !== message.data)
-            );
-        });
-        setCurrentUser(localStorage.getItem("email") || "");
-    }, []);
-
+    const [{ orderId }] = useContext(StateContext);
     return (
-        <div>
-            <h1>Orders</h1>
-            <h2>Create</h2>
-            <OrderForm />
-            <h2>Ongoing</h2>
-            <OrderQueue orderQueue={orderQueue} currentUser={currentUser} />
-        </div>
+        <>
+            <div className={styles.queueContainer}>
+                <h2>Ongoing Orders</h2>
+                <OrderQueue />
+            </div>
+            {!orderId ? (
+                <div>
+                    <h2>Create</h2>
+                    <OrderForm />
+                </div>
+            ) : (
+                <h2>Thanks for placing order</h2>
+            )}
+        </>
     );
 }
 

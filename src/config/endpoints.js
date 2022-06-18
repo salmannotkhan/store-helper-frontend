@@ -1,3 +1,3 @@
-const ENDPOINTS = { ORDER_URL: "/orders" }
+const ENDPOINTS = { ORDER_URL: "/orders" };
 
-export default ENDPOINTS
+export default ENDPOINTS;
