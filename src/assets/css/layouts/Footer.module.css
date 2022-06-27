@@ -12,5 +12,9 @@
 }
 
 .navLinks a {
-    padding: 10px;
+    padding: 15px;
+}
+
+.navLinks a:hover {
+    color: pink;
 }

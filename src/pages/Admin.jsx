@@ -3,13 +3,12 @@ import OrderList from "components/OrderList";
 
 function Admin() {
     return (
-        <div>
-            <h1>Orders</h1>
-            <h2>Create</h2>
-            <OrderForm />
-            <h2>Ongoing</h2>
+        <>
+            <h2>Ongoing Orders</h2>
             <OrderList />
-        </div>
+            <h2>Create Order</h2>
+            <OrderForm />
+        </>
     );
 }
 

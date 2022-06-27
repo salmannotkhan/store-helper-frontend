@@ -6,7 +6,9 @@ function BaseLayout() {
     return (
         <>
             <Header title="Some Random Startup" />
-            <Outlet />
+            <main>
+                <Outlet />
+            </main>
             <Footer />
         </>
     );

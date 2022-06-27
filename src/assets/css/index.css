@@ -22,8 +22,21 @@ body,
     justify-content: space-between;
 }
 
+main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding-inline: 15px;
+    padding-block: 10px;
+}
+
 a {
     text-decoration: none;
+}
+
+a,
+button {
+    cursor: pointer;
 }
 
 ul {
@@ -38,4 +51,8 @@ h5,
 h6 {
     text-align: center;
     padding-block: 15px;
+}
+
+li h4 {
+    text-align: left;
 }

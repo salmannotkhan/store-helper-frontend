@@ -4,6 +4,8 @@ import { reducer } from "./reducer";
 const initalState = {
     orderId: "",
     orderQueue: [],
+    services: [],
+    editService: {},
 };
 export const StateContext = createContext(initalState);
 

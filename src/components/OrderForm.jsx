@@ -7,7 +7,7 @@ import { StateContext } from "state/GlobalState";
 import { setOrderId } from "state/actions";
 
 function OrderForm() {
-    const [, dispatch] = useContext(StateContext);
+    const [state, dispatch] = useContext(StateContext);
 
     const createOrder = async (orderDetails) => {
         const response = await http.post(ENDPOINTS.ORDER_URL, orderDetails);
@@ -33,10 +33,11 @@ function OrderForm() {
                 <div>
                     <label htmlFor="service">Service:</label>
                     <Field component="select" name="service">
-                        <option value="Hair Cut">Hair Cut</option>
-                        <option value="Shave">Shave</option>
-                        <option value="Massage">Massage</option>
-                        <option value="Dye">Dye</option>
+                        {state.services.map((service) => (
+                            <option key={service._id} value={service._id}>
+                                {service.name} - Rs.{service.rate}
+                            </option>
+                        ))}
                     </Field>
                 </div>
                 <button type="submit">Create</button>

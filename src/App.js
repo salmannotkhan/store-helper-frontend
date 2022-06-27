@@ -9,21 +9,45 @@ import {
     removeOrder,
     setOrderId,
     setOrderQueue,
+    setServices,
     updateOrderStatus,
 } from "state/actions";
 import ablyChannels from "config/ably";
 import http from "config/http";
 import ENDPOINTS from "config/endpoints";
+import Services from "pages/Services";
+import ServiceAdmin from "pages/ServiceAdmin";
 
 function App() {
     const [{ orderId }, dispatch] = useContext(StateContext);
 
-    const loadAllOrders = useCallback(async () => {
-        const response = await http.get(ENDPOINTS.ORDER_URL);
-        dispatch(
-            setOrderQueue(Array.isArray(response.data) ? response.data : [])
-        );
-    }, [dispatch]);
+    const loadAllOrders = useCallback(
+        async (abortController) => {
+            try {
+                const response = await http.get(ENDPOINTS.ORDER_URL, {
+                    signal: abortController.signal,
+                });
+                dispatch(
+                    setOrderQueue(
+                        Array.isArray(response.data) ? response.data : []
+                    )
+                );
+            } catch (_) {}
+        },
+        [dispatch]
+    );
+
+    const loadAllServices = useCallback(
+        async (abortController) => {
+            try {
+                const response = await http.get(ENDPOINTS.SERVICES_URL, {
+                    signal: abortController.signal,
+                });
+                dispatch(setServices(response.data));
+            } catch (_) {}
+        },
+        [dispatch]
+    );
 
     const handleAddOrder = useCallback(
         (message) => {
@@ -51,19 +75,28 @@ function App() {
     );
 
     useEffect(() => {
-        loadAllOrders();
+        const abortController = new AbortController();
+        loadAllOrders(abortController);
+        loadAllServices(abortController);
         dispatch(setOrderId(localStorage.getItem("orderId") || ""));
         ablyChannels.orderQueueChannel.subscribe("added", handleAddOrder);
         ablyChannels.orderQueueChannel.subscribe("update", handleUpdateOrder);
 
         return () => {
+            abortController.abort();
             ablyChannels.orderQueueChannel.unsubscribe("added", handleAddOrder);
             ablyChannels.orderQueueChannel.unsubscribe(
                 "update",
                 handleUpdateOrder
             );
         };
-    }, [dispatch, handleAddOrder, handleUpdateOrder, loadAllOrders]);
+    }, [
+        dispatch,
+        handleAddOrder,
+        handleUpdateOrder,
+        loadAllOrders,
+        loadAllServices,
+    ]);
 
     useEffect(() => {
         ablyChannels.orderQueueChannel.subscribe(
@@ -84,8 +117,12 @@ function App() {
             <Routes>
                 <Route path="/" element={<BaseLayout />}>
                     <Route index element={<Home />} />
+                    <Route path="services" element={<Services />} />
+                    <Route path="admin/">
+                        <Route index element={<Admin />} />
+                        <Route path="services" element={<ServiceAdmin />} />
+                    </Route>
                 </Route>
-                <Route path="/admin" element={<Admin />} />
             </Routes>
         </BrowserRouter>
     );

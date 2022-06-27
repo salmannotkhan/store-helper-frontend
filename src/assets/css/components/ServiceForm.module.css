@@ -1,0 +1,15 @@
+.serviceForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.serviceForm :is(input, button) {
+    padding: 10px 5px;
+}
+
+.serviceForm > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

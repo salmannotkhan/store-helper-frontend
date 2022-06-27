@@ -1,0 +1,27 @@
+.servicesList {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: calc(100vh - (60px + 70px + 70px));
+    overflow: scroll;
+    outline: 1px solid currentColor;
+    border-radius: 3px;
+    padding: 15px;
+    padding-top: 0;
+}
+
+.servicesList.admin {
+    max-height: calc(100vh - (60px + 195px + 60px + 70px + 70px));
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.actions > button {
+    padding: 5px 25px;
+}

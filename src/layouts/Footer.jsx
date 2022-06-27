@@ -1,7 +1,9 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import styles from "assets/css/layouts/Footer.module.css";
 
 function Footer() {
+    const location = useLocation();
+
     const activeLink = {
         textDecoration: "underline",
     };
@@ -12,7 +14,11 @@ function Footer() {
                 <ul className={styles.navLinks}>
                     <li>
                         <NavLink
-                            to="/services"
+                            to={
+                                location.pathname.startsWith("/admin")
+                                    ? "/admin/services"
+                                    : "/services"
+                            }
                             style={({ isActive }) =>
                                 isActive ? activeLink : null
                             }>
@@ -21,7 +27,11 @@ function Footer() {
                     </li>
                     <li>
                         <NavLink
-                            to="/"
+                            to={
+                                location.pathname.startsWith("/admin")
+                                    ? "/admin"
+                                    : "/"
+                            }
                             style={({ isActive }) =>
                                 isActive ? activeLink : null
                             }>
@@ -30,7 +40,11 @@ function Footer() {
                     </li>
                     <li>
                         <NavLink
-                            to="/about"
+                            to={
+                                location.pathname.startsWith("/admin")
+                                    ? "/admin/about"
+                                    : "/about"
+                            }
                             style={({ isActive }) =>
                                 isActive ? activeLink : null
                             }>

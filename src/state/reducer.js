@@ -1,8 +1,10 @@
 import {
     ADD_ORDER,
     REMOVE_ORDER,
+    SET_EDIT,
     SET_ORDERID,
     SET_ORDER_QUEUE,
+    SET_SERVICES,
     UPDATE_ORDER_STATUS,
 } from "./actionTypes";
 
@@ -25,6 +27,16 @@ export const reducer = (state, { type, payload }) => {
                 orderQueue: state.orderQueue.map((o) =>
                     o._id === payload ? { ...o, status: "processing" } : o
                 ),
+            };
+        case SET_SERVICES:
+            return {
+                ...state,
+                services: payload,
+            };
+        case SET_EDIT:
+            return {
+                ...state,
+                editService: payload,
             };
         default:
             return state;
