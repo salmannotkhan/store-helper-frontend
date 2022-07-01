@@ -20,7 +20,7 @@ function OrderList() {
             {orderQueue.map((order) => (
                 <li className={styles.order} key={order._id}>
                     <h3>{order.name}</h3>
-                    <p>{order.service}</p>
+                    <p>{order.service.name}</p>
                     {order.status === "processing" ? (
                         <button onClick={() => markAsCompleted(order._id)}>
                             Mark as Completed

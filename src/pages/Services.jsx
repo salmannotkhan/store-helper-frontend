@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { StateContext } from "state/GlobalState";
 import styles from "assets/css/components/ServicesList.module.css";
-import { setEditService } from "state/actions";
+import { setEditService, setServices } from "state/actions";
 import http from "config/http";
 import ENDPOINTS from "config/endpoints";
 import { useLocation } from "react-router-dom";
@@ -15,8 +15,15 @@ function Services() {
         dispatch(setEditService({ _id, name, rate, approxTime }));
     };
 
-    const handleDelete = (serviceId) => {
-        http.delete(`${ENDPOINTS.SERVICES_URL}/${serviceId}`);
+    const handleDelete = async (serviceId) => {
+        const response = await http.delete(
+            `${ENDPOINTS.SERVICES_URL}/${serviceId}`
+        );
+        if (response.status < 300) {
+            dispatch(
+                setServices(state.services.filter((s) => s._id !== serviceId))
+            );
+        }
     };
 
     return (

@@ -4,15 +4,24 @@ import { Formik, Form, Field } from "formik";
 import styles from "assets/css/components/ServiceForm.module.css";
 import { useContext } from "react";
 import { StateContext } from "state/GlobalState";
-import { setEditService } from "state/actions";
+import { setEditService, setServices } from "state/actions";
 
 function ServiceForm() {
     const [{ editService }, dispatch] = useContext(StateContext);
     const handleSubmit = async (values) => {
+        let response;
         if (editService._id) {
-            http.put(`${ENDPOINTS.SERVICES_URL}/${editService._id}`, values);
+            response = await http.put(
+                `${ENDPOINTS.SERVICES_URL}/${editService._id}`,
+                values
+            );
+            cancelEdit();
         } else {
-            http.post(ENDPOINTS.SERVICES_URL, values);
+            response = await http.post(ENDPOINTS.SERVICES_URL, values);
+        }
+        if (response.status < 300) {
+            const services = await http.get(ENDPOINTS.SERVICES_URL);
+            dispatch(setServices(services.data));
         }
     };
 

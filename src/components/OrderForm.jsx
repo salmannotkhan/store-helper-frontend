@@ -19,7 +19,7 @@ function OrderForm() {
 
     return (
         <Formik
-            initialValues={{ name: "", email: "", service: "Hair Cut" }}
+            initialValues={{ name: "", email: "", service: "" }}
             onSubmit={createOrder}>
             <Form className={styles.orderForm}>
                 <div>
