@@ -1,5 +1,6 @@
 .queue {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     flex: 1;
@@ -8,26 +9,34 @@
 }
 
 .queue li {
-    height: 25px;
-    width: 15px;
+    display: grid;
+    align-items: center;
+    text-align: center;
+    height: 50px;
+    width: 50px;
     background-color: #777777;
     border-radius: 5px;
     border: 3px solid tranparent;
+    transform: translateX(-100%);
 }
 
 .queue li.current {
     border: 3px solid greenyellow;
+    position: relative;
 }
 
 .queue li.current:before {
     content: "< You're Here";
     display: block;
-    margin-top: 20px;
+    position: absolute;
     width: max-content;
-    transform-origin: left;
-    transform: rotate(90deg) translateY(-40%);
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    margin-inline-start: 15px;
 }
 
 .queue li.active {
     background-color: black;
+    color: white;
 }

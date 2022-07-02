@@ -7,14 +7,14 @@ function OrderQueue() {
 
     return (
         <ul className={styles.queue}>
-            {state.orderQueue.map((order) => (
+            {state.orderQueue.map((order, idx) => (
                 <li
                     key={order._id}
                     className={`${
                         state.orderId === order._id ? styles.current : ""
-                    } ${
-                        order.status === "processing" ? styles.active : ""
-                    }`}></li>
+                    } ${order.status === "processing" ? styles.active : ""}`}>
+                    {idx + 1}
+                </li>
             ))}
         </ul>
     );
