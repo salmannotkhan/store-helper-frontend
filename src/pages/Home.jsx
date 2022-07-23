@@ -18,7 +18,7 @@ function Home() {
                     <OrderForm />
                 </div>
             ) : (
-                <h2>Thanks for placing order</h2>
+                <h2>Thanks for placing order. your token is: {orderId}</h2>
             )}
         </>
     );

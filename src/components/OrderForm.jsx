@@ -19,7 +19,12 @@ function OrderForm() {
 
     return (
         <Formik
-            initialValues={{ name: "", email: "", service: "" }}
+            initialValues={{
+                name: "",
+                email: "",
+                service: state.services[0]?._id || "",
+            }}
+            enableReinitialize={true}
             onSubmit={createOrder}>
             <Form className={styles.orderForm}>
                 <div>

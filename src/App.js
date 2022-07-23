@@ -32,6 +32,14 @@ function App() {
                         Array.isArray(response.data) ? response.data : []
                     )
                 );
+                const orderIdExists = response.data.some(
+                    (order) => order._id === localStorage.getItem("orderId")
+                );
+                if (orderIdExists) {
+                    dispatch(setOrderId(localStorage.getItem("orderId")));
+                } else {
+                    localStorage.removeItem("orderId");
+                }
             } catch (_) {}
         },
         [dispatch]
@@ -78,7 +86,6 @@ function App() {
         const abortController = new AbortController();
         loadAllOrders(abortController);
         loadAllServices(abortController);
-        dispatch(setOrderId(localStorage.getItem("orderId") || ""));
         ablyChannels.orderQueueChannel.subscribe("added", handleAddOrder);
         ablyChannels.orderQueueChannel.subscribe("update", handleUpdateOrder);
 
