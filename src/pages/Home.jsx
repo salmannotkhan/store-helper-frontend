@@ -9,8 +9,14 @@ function Home() {
     const [remainingTime, setRemainingTime] = useState(0)
 
     useEffect(() => {
-        const index = orderQueue.findIndex(order => order._id === orderId)
-        setRemainingTime(orderQueue.slice(0, index).reduce((x, y) => x.service.approxTime + y?.service?.approxTime || 0))
+        if (orderQueue.length && orderId) {
+            const index = orderQueue.findIndex(order => order._id === orderId)
+            if (index > 2) {
+                setRemainingTime(orderQueue.slice(0, index).reduce((x = 0, y = 0) => x.service.approxTime + y?.service?.approxTime || 0))
+            } else {
+                setRemainingTime(orderQueue[0].service.approxTime)
+            }
+        }
     }, [orderId, orderQueue])
     return (
         <>
@@ -26,7 +32,9 @@ function Home() {
             ) : (
                 <>
                     <h2>Thanks for placing order. your token is: {orderId}</h2>
-                    <h2>{Math.floor(remainingTime / 60)} hours {remainingTime % 60} minutes waiting</h2>
+                    {remainingTime ? (
+                            <h2>{Math.floor(remainingTime / 60)} hours {remainingTime % 60} minutes waiting</h2>
+                    ) : <h2>It's your turn</h2>}
                 </>
             )}
         </>
